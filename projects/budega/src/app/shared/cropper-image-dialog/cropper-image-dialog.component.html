@@ -1,0 +1,25 @@
+<h2 mat-dialog-title> {{ 'budega.cropper.image.dialog.title' | translate }}</h2>
+<mat-dialog-content>
+  <image-cropper
+    [imageChangedEvent]="imageChangeEvent"
+    [maintainAspectRatio]="true"
+    [containWithinAspectRatio]="false"
+    [aspectRatio]="4/4"
+    [resizeToWidth]="128"
+    [cropperMinWidth]="128"
+    [onlyScaleDown]="true"
+    [roundCropper]="false"
+    [alignImage]="'left'"
+    [transform]="transform"
+    [style.display]="showCropper ? null : 'none'"
+    containWithinAspectRatio='false'
+    roundCropper='true'
+    format="png"
+    (imageLoaded)="imageLoaded()"
+    (imageCropped)="imageCropped($event)"
+  ></image-cropper>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close> {{'budega.cancel' | translate}}</button>
+  <button mat-button [mat-dialog-close]="result" cdkFocusInitial> {{'budega.save' | translate}}</button>
+</mat-dialog-actions>

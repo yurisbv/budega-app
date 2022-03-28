@@ -1,0 +1,83 @@
+<mat-horizontal-stepper linear #stepper>
+    <mat-step completed="{{ orderTimeline[1] ? true : false }}" color="primary" label="Order" *ngIf='orderTimeline[0] as tl'>
+        <ng-template matStepLabel>
+            <fa-icon icon='shopping-cart'></fa-icon>
+            {{ 'budega.order.'+tl.state | translate | titlecase }}
+        </ng-template>
+        <p>{{ formatLocal(tl.date).replace(' ',' às ')+'h' }}</p>
+    </mat-step>
+    <mat-step completed="{{orderTimeline[2] ? true : false }}" color="primary" label="Separating" *ngIf='orderTimeline[1] as tl; else separatingElse'>
+        <ng-template matStepLabel>
+            <fa-icon icon="shopping-bag"></fa-icon>
+            {{ 'budega.order.'+tl.state | translate | titlecase }}
+        </ng-template>
+        <p>{{ formatLocal(tl.date).replace(' ',' às ')+'h' }}</p>
+    </mat-step>
+    <ng-template #separatingElse>
+        <mat-step completed="false" label="Separating" state="waiting">
+            <ng-template matStepLabel>
+                <fa-icon icon="shopping-bag" color="secondary"></fa-icon>
+                {{ 'budega.order.SEPARATING' | translate | titlecase }}
+            </ng-template>
+            <p>{{ "budega.order.waiting.separating" | translate }}</p>    
+        </mat-step>
+    </ng-template>
+    <mat-step completed="true" color="primary" label="Ready" *ngIf='orderTimeline[2] as tl; else readyElse'>
+        <ng-template matStepLabel>
+            <fa-icon icon="shopping-basket"></fa-icon>
+            {{ 'budega.order.'+tl.state | translate | titlecase }}
+        </ng-template>
+        <p>{{ formatLocal(tl.date).replace(' ',' às ')+'h' }}</p>
+    </mat-step>
+    <ng-template #readyElse>
+        <mat-step completed="false" label="Ready" state="waiting">
+            <ng-template matStepLabel>
+                <fa-icon icon="shopping-basket"></fa-icon>
+                {{ 'budega.order.READY' | translate | titlecase }}
+            </ng-template>
+            <p>{{ "budega.order.waiting.ready" | translate }}</p>    
+        </mat-step>
+    </ng-template>
+    <mat-step completed="true" color="primary" label="Delivering" *ngIf='orderTimeline[3] as tl; else deliveryElse'>
+        <ng-template matStepLabel>
+            <fa-icon icon="bicycle"></fa-icon>
+            {{ 'budega.order.'+tl.state | translate | titlecase }}
+        </ng-template>
+        <p>{{ formatLocal(tl.date).replace(' ',' às ')+'h' }}</p>
+    </mat-step>
+    <ng-template #deliveryElse>
+        <mat-step completed="false" label="Delivering" state="waiting">
+            <ng-template matStepLabel>
+                <fa-icon icon="bicycle"></fa-icon>
+                {{ 'budega.order.DELIVERING' | translate | titlecase }}
+            </ng-template>
+            <p>{{ "budega.order.waiting.delivering" | translate }}</p>    
+        </mat-step>
+    </ng-template>
+    <mat-step completed="true" color="primary" label="Finished" *ngIf='orderTimeline[4] as tl; else finishedElse'>
+        <ng-template matStepLabel>
+            <fa-icon icon="done"></fa-icon>
+            {{ 'budega.order.'+tl.state | translate | titlecase }}
+        </ng-template>
+        <p>{{ formatLocal(tl.date).replace(' ',' às ')+'h' }}</p>
+    </mat-step>
+    <ng-template #finishedElse>
+        <mat-step completed="false" label="Finished" state="waiting">
+            <ng-template matStepLabel>
+                <fa-icon icon="done"></fa-icon>
+                {{ 'budega.order.DELIVERING' | translate | titlecase }}
+            </ng-template>
+            <p>{{ "budega.order.waiting.delivering" | translate }}</p>    
+        </mat-step>
+    </ng-template>
+    <!-- custom icons -->
+    <ng-template matStepperIcon="edit">
+        <fa-icon icon='check'></fa-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+        <fa-icon icon='check'></fa-icon>
+    </ng-template>
+    <ng-template matStepperIcon="waiting">
+        <fa-icon color="secondary" icon='clock'></fa-icon>
+    </ng-template>
+</mat-horizontal-stepper>

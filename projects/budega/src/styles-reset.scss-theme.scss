@@ -1,0 +1,38 @@
+@import '.~@angular/material/theming';
+
+@mixin budega-styles-reset-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+
+  a {
+    color: mat-color($foreground, text);
+
+    &:hover {
+      color: mat-color($accent);
+    }
+  }
+
+  code {
+    color: mat-color($accent, lighter-contrast);
+    background-color: mat-color($accent, lighter);
+  }
+
+  p {
+    a {
+      color: mat-color($accent);
+
+      &:hover {
+        color: mat-color($accent, darker);
+      }
+    }
+  }
+
+  /* custom snack-bar */
+  .custom-snack-bar {
+    & button {
+      color: mat-color($foreground, text);
+      background-color: mat-color($accent);
+    }
+  }
+}

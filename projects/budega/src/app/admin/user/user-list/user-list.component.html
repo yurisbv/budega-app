@@ -1,0 +1,73 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" matSort #table aria-label="Elements" [dataSource]="userList">
+
+    <!-- CreatedAt Column -->
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.createdAt' | translate }}</th>
+      <td mat-cell *matCellDef="let row">{{ formatLocal(row.createdTimestamp) }}</td>
+    </ng-container>
+
+    <!-- Full Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.name' | translate }}</th>
+      <td mat-cell *matCellDef="let row">{{(row.firstName ?? '') + ' ' + (row.lastName ?? '') }}</td>
+    </ng-container>
+
+    <!-- Image Column -->
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.image' | translate }}</th>
+      <td mat-cell *matCellDef="let row">
+        <img  class="avatar" *ngIf='row.attributes && row.attributes.avatar != undefined'
+             src='{{api}}/{{row.attributes.avatar}}'
+             alt='{{"budega.user.avatar.alt" | translate }}' />
+        <fa-icon class="fa-3x" *ngIf='!row.attributes || row.attributes.avatar === undefined' icon="user-circle"></fa-icon>
+      </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.user.email' | translate }}</th>
+      <td mat-cell *matCellDef="let row">
+        {{row.email}}
+      </td>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.role' | translate }}</th>
+      <td mat-cell *matCellDef="let row">{{'budega.role.'+ row.clientRoles.name | translate}}</td>
+    </ng-container>
+
+    <!-- Email Verified Column -->
+    <ng-container matColumnDef="emailVerified">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.user.email.verified' | translate }}</th>
+      <td mat-cell *matCellDef="let row">{{(row.emailVerified ? 'budega.yes' : 'budega.no' )| translate}}</td>
+    </ng-container>
+
+    <!-- Active Column -->
+    <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.active' | translate }}</th>
+      <td mat-cell *matCellDef="let row"><mat-slide-toggle (change)='toggleActive($event, row.id)' [ngModel]="row.enabled"></mat-slide-toggle></td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'budega.actions' | translate }}</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button matTooltip="{{'budega.edit' | translate }}" [routerLink]="['./', row.id]">
+          <fa-icon icon="edit"></fa-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator
+                 [length]="dataSource?.data.length"
+                 [pageIndex]="0"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[20, 30, 50, 100]">
+  </mat-paginator>
+</div>

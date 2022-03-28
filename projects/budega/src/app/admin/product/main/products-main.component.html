@@ -1,0 +1,30 @@
+<div class='container'>
+  <div class="columns">
+    <h1>{{'budega.products' | translate }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="row">
+        <mat-form-field class="col-md-3" [ngClass]="routeAnimationsElements">
+          <input matInput placeholder="{{'budega.product.new' | translate }}"
+                 formControlName="name">
+          <mat-error *ngIf="form.get('name').invalid">
+            {{'budega.notempty' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <button mat-mini-fab [disabled]="form.get('name').invalid" matTooltip="{{'budega.product.create' | translate }}">
+          <fa-icon icon="paper-plane"></fa-icon>
+        </button>
+      </div>
+    </form>
+
+  <ng-container *ngIf="productList$ | ngrxPush; let list; let e = $error, let c = $complete">
+    <div class='product-list'>
+    <budega-product-list  [productList]="list"  *ngIf="list.length" >
+    </budega-product-list>
+    </div>
+    <ng-container *ngIf="!list.length">
+      <p><strong>{{'budega.product.emptylist' | translate }}</strong><br>{{'budega.product.addnew' | translate }}</p>
+    </ng-container>
+  </ng-container>
+  </div>
+</div>

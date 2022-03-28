@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>{{ 'budega.admin.dashboard.title' | translate }}</h1>
+      <p>{{ 'budega.admin.dashboard.subtitle' | translate }}</p>
+  </div>
+  </div>
+  <div class="row">
+    
+    <ng-container *ngrxLet="orderList$; let list; let e = $error, let c = $complete" >
+      <div *ngIf="list.length >= 1" class="col-sm-4">
+        <div class="row d-flex justify-content-around">
+          <mat-card >
+            <h1 style="font-size: 4rem; text-align: center;">{{ list.length }}</h1>
+            <p>{{ 'budega.admin.dashboard.orders.amount' | translate }}</p>
+          </mat-card>
+          <mat-card >
+            <h1 style="font-size: 4rem; text-align: center;">R$ {{ordersMoneyAmount(list)}}</h1>
+            <p>{{ 'budega.admin.dashboard.orders.revenues' | translate }}</p>
+          </mat-card>    
+        </div>
+      </div>
+    </ng-container>  
+  </div>
+  <hr style="margin-top: 1rem; margin-bottom: 1rem;">
+  <div class="row">
+  <div class="col-sm-8">
+      <div class="row">
+        <ng-container *ngrxLet="orderList$; let list; let e = $error, let c = $complete" >
+        <div *ngIf="list.length >= 1" class="col-md-12 group" [ngClass]="routeAnimationsElements">
+            <h2>{{ 'budega.admin.dashboard.orders.byday' | translate }}</h2>
+            <div echarts [options]="barChartOption(list)" class="demo-chart"></div>
+        </div>
+        </ng-container>
+      </div>
+  </div>
+  <div class="col-sm-4">
+      <ng-container *ngrxLet="productList$; let products; let e = $error, let c = $complete" >
+        <div *ngIf="products.length >= 1" class="col-md-12 group" [ngClass]="routeAnimationsElements">
+          <h2>{{ 'budega.admin.dashboard.products.stock' | translate }}</h2>
+          <div echarts [options]="pieChartOption(products)" class="demo-chart"></div>
+        </div>
+      </ng-container>
+  </div>
+</div>

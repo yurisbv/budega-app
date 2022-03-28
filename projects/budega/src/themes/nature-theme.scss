@@ -1,0 +1,9 @@
+$budega-nature-primary: mat-palette($mat-brown, 700, 300, 900);
+$budega-nature-accent: mat-palette($mat-deep-purple, 300);
+$budega-nature-warn: mat-palette($mat-red, 600);
+
+$budega-nature-theme: mat-light-theme(
+  $budega-nature-primary,
+  $budega-nature-accent,
+  $budega-nature-warn
+);

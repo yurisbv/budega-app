@@ -1,0 +1,136 @@
+<ng-container *ngIf='edit$ | async'>
+
+  <div class='container'>
+    <form [formGroup]="form">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <h3>{{'budega.product.editing' | translate }}</h3>
+          <mat-card>
+            <span class="d-flex justify-content-between align-items-baseline">
+              <strong>{{ form.controls['name'].value }}</strong>
+                <mat-slide-toggle #activeToggle formControlName="active">{{ 'budega.product.active' | translate }}</mat-slide-toggle>
+                <div>
+                  <button class='button-fab-action' mat-mini-fab color="primary" (click)="removeProduct()" matTooltip="{{'budega.remove' | translate }}">
+                   <fa-icon icon="trash"></fa-icon>
+                  </button>
+                  <button class='button-fab-action' mat-mini-fab color="accent" matTooltip="{{'budega.save' | translate }}" (click)="save()">
+                    <fa-icon icon="save"></fa-icon>
+                  </button>
+                </div>
+            </span>
+
+            <div class='row'>
+              <div class='col'>
+                <img *ngIf='image != undefined' width='150px' src='data:{{image.mimetype}};base64,{{image.buffer}}' alt='{{image.originalname}}' />
+                <img #productImage *ngIf='!image' width='150px' alt='' src='' />
+                <div>
+                  <button class='img-upload' type="button" mat-stroked-button (click)="fileInput.click()">{{'budega.upload.image' | translate }}</button>
+                  <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-form-field class="col-md-3" [ngClass]="routeAnimationsElements">
+                <label>
+                  <input matInput placeholder="{{'budega.product.name' | translate }}"
+                     formControlName="name">
+                </label>
+                <mat-error *ngIf="form.get('name').invalid">
+                  {{'budega.notempty' | translate }}
+                </mat-error>
+              </mat-form-field>
+              <div class="col-md-3" [ngClass]="routeAnimationsElements">
+                <p> {{ 'budega.product.status.' + this.status || 'EMPTY' | translate }}
+                </p>
+              </div>
+            </div>
+            <div class='row'>
+              <mat-form-field class="col-md-3" [ngClass]="routeAnimationsElements">
+                <input matInput type='number' placeholder="{{'budega.product.stock.amount' | translate }}"
+                       formControlName="stockAmount">
+                <mat-error *ngIf="form.get('stockAmount').invalid">
+                  {{'budega.notempty' | translate }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field class="col-md-3" [ngClass]="routeAnimationsElements">
+                <input matInput type='number' placeholder="{{'budega.product.stock.minimumalert' | translate }}"
+                       formControlName="stockMinimumAlert">
+                <mat-error *ngIf="form.get('stockMinimumAlert').invalid">
+                  {{'budega.notempty' | translate }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field class="col-md-3" [ngClass]="routeAnimationsElements">
+                <input matInput [patterns]="realPattern" prefix='R$ ' mask="separator,2" thousandSeparator="." placeholder="{{'budega.price' | translate }}"
+                       formControlName="price">
+                <mat-error *ngIf="form.get('price').invalid">
+                  {{'budega.notempty' | translate }}
+                </mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class='row'>
+              <mat-form-field class="col-md-12" [ngClass]="routeAnimationsElements">
+                <mat-label>{{'budega.categories' | translate }}</mat-label>
+                <mat-chip-list #chipList>
+                  <mat-chip *ngFor="let category of categoriesList" [selectable]="categoriesSelectable"
+                            [removable]="categoriesRemovable" (removed)="removeCategory(category)">
+                    {{category.name}}
+                    <fa-icon icon='times-circle' matChipRemove *ngIf="categoriesRemovable" matTooltip='{{"budega.cancel" | translate }}'></fa-icon>
+                  </mat-chip>
+                  <input placeholder="{{'budega.product.category.add' | translate }}"
+                         #categoriesInput
+                         [matChipInputFor]="chipList"
+                         [matChipInputSeparatorKeyCodes]="categoriesSeparatorKeysCodes"
+                         [matAutocomplete]="auto"
+                         [matChipInputAddOnBlur]="categoriesAddOnBlur"
+                         (matChipInputTokenEnd)="addCategory($event)"
+                  >
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCategory($event)">
+                  <mat-option *ngFor="let category of allCategoriesList" [value]="category">
+                    {{ category.name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div class="row">
+              <span class="d-flex justify-content-between align-items-baseline">
+              <mat-form-field appearance="fill" class="col" [ngClass]="routeAnimationsElements">
+                <mat-label>{{'budega.department' | translate }}</mat-label>
+                <mat-select formControlName="department" [compareWith]="customCompare" required>
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let department of departmentListSelector" [value]="department">
+                    {{department.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-mini-fab (click)="newDepartment()" matTooltip="{{'budega.new' | translate }}">
+                <fa-icon  icon="plus"></fa-icon>
+              </button>
+              </span>
+<!--            </div>-->
+<!--            <div class='row'>-->
+              <span class="d-flex justify-content-between align-items-baseline">
+              <mat-form-field appearance="fill" class="col" [ngClass]="routeAnimationsElements">
+                  <mat-label>{{'budega.brand' | translate }}</mat-label>
+                  <mat-select formControlName="brand" [compareWith]="customCompare" required>
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let brand of brandListSelector" [value]="brand">
+                      {{brand.name}}
+                    </mat-option>
+                  </mat-select>
+
+              </mat-form-field>
+              <button mat-mini-fab  matTooltip="{{'budega.new' | translate }}">
+                <fa-icon (click)="newBrand()" icon="plus"></fa-icon>
+              </button>
+              </span>
+            </div>
+
+          </mat-card>
+      </div>
+      </div>
+    </form>
+  </div>
+</ng-container>

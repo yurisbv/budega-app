@@ -1,0 +1,56 @@
+<div class='container'>
+    <div class="row d-flex align-items-stretch">
+        <ng-container *ngrxLet="orderList$; let list; let e = $error, let c = $complete" >
+            <div class="col-12" *ngFor='let item of list' [ngClass]="routeAnimationsElements">
+                <mat-card>
+                    <mat-card-header color="accent">
+                        <mat-card-title>
+                            {{ 'budega.order.number' | translate | titlecase }} <strong>#{{ extractProductId(item._id) }}</strong>
+                        </mat-card-title>                    
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>Lista de itens:</p>
+                        <mat-chip-list>
+                            <mat-chip *ngFor="let product of item.items">
+                                <strong>{{productQuantity(product, item.itemsList)}}x</strong> {{ product.name }} 
+                            </mat-chip>
+                        </mat-chip-list>
+                        <budega-order-timeline [orderTimeline]="item.timeline"></budega-order-timeline>
+                        <div>
+                            <p>
+                                <strong>{{'budega.cart.address' | translate }}</strong>
+                            </p>
+                        <p>
+                            <strong>{{'budega.cart.district' | translate }}:</strong> {{ item.orderAddress.district }}
+                            <strong>{{'budega.cart.street' | translate }}:</strong> {{ item.orderAddress.street }}
+                            <strong>{{'budega.cart.number' | translate }}:</strong> {{ item.orderAddress.number }}
+                            <strong>{{'budega.cart.cep' | translate }}:</strong> {{ item.orderAddress.cep }}
+                        </p>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>                        
+                        <ng-container *ngIf="item.state === 'ORDER'">
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['stockist']" (click)="alterState(item._id, 'SEPARATING')">Separar</button>
+                        </ng-container>
+                        <ng-container *ngIf="item.state === 'SEPARATING'">
+                            <button  mat-button mat-stroked-button color="accent" *budegaHasRole="['stockist']" (click)="alterState(item._id, 'READY')">Concluir separação</button>
+                        </ng-container>
+                        <ng-container *ngIf="item.state === 'READY'">
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['delivery-person']" (click)="alterState(item._id, 'DELIVERY')">Entregar</button>
+                        </ng-container>
+                        <ng-container *ngIf="item.state === 'DELIVERY'">
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['delivery-person']" (click)="alterState(item._id, 'DELIVERED')">Entrega realizada</button>
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['delivery-person']" (click)="alterState(item._id, 'UNDELIVERED')">Entrega não realizada</button>
+                        </ng-container>
+                        <ng-container *ngIf="item.state !== 'CANCELLED' && item.state !== 'DELIVERED'">
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['manager']" (click)="alterState(item._id, 'CANCELLED')">Cancelar</button>
+                        </ng-container>
+                        <ng-container *ngIf="item.state === 'UNDELIVERED'">
+                            <button mat-button mat-stroked-button color="accent" *budegaHasRole="['manager']" (click)="alterState(item._id, 'READY')">Reenviar</button>
+                        </ng-container>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </ng-container>
+    </div>
+</div>

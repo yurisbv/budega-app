@@ -1,0 +1,10 @@
+<div  *ngIf="loadingBar$ | async as lb">
+  <mat-progress-bar
+    *ngIf="lb.show"
+    color="accent"
+    mode="{{lb.mode}}"
+    value="{{lb.value}}"
+    bufferValue="{{lb.bufferValue}}"
+  >
+  </mat-progress-bar>
+</div>

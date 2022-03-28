@@ -1,0 +1,96 @@
+<div class="container">
+  <ng-container *ngrxLet='cart$; let cart; let e = $error, let c = $complete'>
+    <mat-card *ngIf='cart.size; else cartEmpty'>
+      <div class="col">
+        <div *ngFor='let item of cartArray(cart); let i = index'>
+          <div class="product-cart justify-content-between">
+                  <div class='col-12'>
+                  <div class='row'>
+                    <div class='col-2 d-flex align-items-center'>
+                      <img class='product-cart-img' mat-card-image src="data:{{item.product.image.mimetype}};base64,{{item.product.image.buffer}}" alt="{{item.product.image.originalname}}">
+                    </div>
+                    <div class='col-7'>
+                      <h4>{{item.product.name}}</h4>
+                      <span> <strong>{{item.product.department.name}}</strong> {{item.product.brand.name}} </span>
+                    </div>
+                      <div class='col-1 d-flex align-items-center'>
+                        <strong>R$: {{item.product.price*item.amount}}</strong>
+                      </div>
+                      <div class='col-2 d-flex align-items-center'>
+                        <div class='d-flex justify-content-between align-items-baseline'>
+                          <button
+                            [matTooltip]="'budega.menu.minus' | translate"
+                            matTooltipPosition="below"
+                            mat-icon-button color="accent"
+                            (click)='removeProduct(item.product)'
+                          >
+                            <fa-icon icon="minus"></fa-icon>
+                          </button>
+                          {{ item.amount }}
+                          <button
+                            [matTooltip]="'budega.menu.add' | translate"
+                            matTooltipPosition="below"
+                            mat-icon-button color="accent"
+                            (click)='addProduct(item.product)'
+                          >
+                            <fa-icon icon="plus"></fa-icon>
+                          </button>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+        <div style="margin-top: 1rem;">
+          <form [formGroup]="form">
+            <h3  [ngClass]="routeAnimationsElements">{{'budega.cart.address' | translate }}</h3>
+              <div class="row">
+                <mat-form-field class="col-md-3 col-sm-12" [ngClass]="routeAnimationsElements">
+                  <input matInput placeholder="{{'budega.cart.street' | translate }}"
+                          formControlName="street">
+                  <mat-error *ngIf="form.get('street').invalid">
+                    {{'budega.notempty' | translate }}
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="col-md-2 col-sm-1" [ngClass]="routeAnimationsElements">
+                  <input matInput placeholder="{{'budega.cart.number' | translate }}"
+                          formControlName="number">
+                  <mat-error *ngIf="form.get('number').invalid">
+                    {{'budega.notempty' | translate }}
+                  </mat-error>
+                </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="col-md-4 col-sm-2" [ngClass]="routeAnimationsElements">
+                    <input type='text' matInput placeholder="{{'budega.cart.cep' | translate }}"
+                            formControlName="cep">
+                    <mat-error *ngIf="form.get('cep').invalid">
+                      {{'budega.notempty' | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="col-md-3 col-sm-2" [ngClass]="routeAnimationsElements">
+                    <input type='district' matInput placeholder="{{'budega.cart.district' | translate }}"
+                            formControlName="district">
+                        <mat-error *ngIf="form.get('district').errors?.['required']">
+                          {{'budega.notempty' | translate }}
+                        </mat-error>
+                  </mat-form-field>                                    
+                </div>
+              </form>
+        </div>
+        <mat-card-actions class='d-flex justify-content-end'>
+            <div class="row">
+              <button mat-flat-button color='accent' class='buy-button' [disabled]="form.invalid"  [ngClass]="routeAnimationsElements" (click)='finishOrder(cartArray(cart))'>
+                {{'budega.cart.order.buy' | translate}}
+              </button>
+          </div>
+          <h4>{{'budega.cart.order.total' | translate }}: {{ getCartAmountValue(cart) }}</h4>
+        </mat-card-actions>
+      </div>
+    </mat-card>
+    <ng-template #cartEmpty><h2>{{'budega.cart.empty' | translate }}</h2></ng-template>
+  </ng-container>
+</div>

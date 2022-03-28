@@ -1,0 +1,10 @@
+{
+  "/kc/^": {
+    "target": "http://0.0.0.0:8081",
+    "secure": false,
+    "pathRewrite": {
+      "^/kc": ""
+    },
+    "changeOrigin": true
+  }
+}

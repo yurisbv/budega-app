@@ -1,0 +1,9 @@
+$budega-light-primary: mat-palette($mat-grey, 300, 700, 300);
+$budega-light-accent: mat-palette($mat-orange, 400);
+$budega-light-warn: mat-palette($mat-deep-orange, 200);
+
+$budega-light-theme: mat-light-theme(
+  $budega-light-primary,
+  $budega-light-accent,
+  $budega-light-warn
+);
